@@ -62,7 +62,7 @@
 <li><p>安装<code>hexo-deployer-git</code>包</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div><div class="line">``</div><div class="line"></div><div class="line">3. 配置github的public key</div><div class="line">自行google。  [github 的ssh配置帮助](https://help.github.com/articles/connecting-to-github-with-ssh/)</div><div class="line">这一步必须做，不然本地的博客代码不能自动上传到github上。</div><div class="line"></div><div class="line">4. 执行发布命令</div><div class="line">生成静态文件后`hexo g`，执行发布命令为:</div><div class="line">``` bash</div><div class="line">$ hexo deploy  <span class="comment">#简写 hexo d</span></div></pre></td></tr></table></figure>
 <p> 生成与发布命令结合</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo g d</div></pre></td></tr></table></figure>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo g <span class="_">-d</span></div></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>以上，就可以通过<a href="username.github.io">username.github.io</a>访问到自己的博客了。</p>
