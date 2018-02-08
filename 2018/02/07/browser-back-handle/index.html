@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>不同浏览器后退处理方式 | cynthia'blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">不同浏览器后退处理方式</h1><a id="logo" href="/.">cynthia'blog</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">不同浏览器后退处理方式</h1><div class="post-meta">Feb 7, 2018<span> | </span><span class="category"><a href="/categories/技术/">技术</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><p>平时做运营活动时，会经常将一些活动时的用户状态由直接吐出页面，通过设置全局变量，获取这些数据。但最近经常遇到通过页面交互后，用户状态被改变，再离开页面后，通过浏览器的后退按钮，后退回页面后，在有些浏览器中，页面的内容并没有随用户的实际状态而改变页面，而有些又是有更新的。</p>
+<p>之后发现原来不同的浏览器关于后退的处理都是不一样的，所以这里列举了一些常用浏览器处理后退方式的异同。</p>
+<a id="more"></a>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>之前做一些运营活动时，总会有一些交互后的状态改变，然后在跳转到另外的页面。而大家可能都比较喜欢用后退的功能。额…这就问题来了，测试童鞋发现，后退之后，页面展示的内容与当前用户的状态不符，就丢来一个bug。</p>
+<p>额，看到bug的时候，大概是知道原因的，部分浏览器中返回按钮是直接使用缓存的嘛，那就监听当前页面是不是用了缓存就好啦？是的话，就重新加载就好了…  根据这个思路，google 一下 （ps:有这种说法吗…）</p>
+<p>看了部分文章，有说到<code>BFCache</code>的，<code>pageshow</code>的，<code>e.persisted</code>的。最常看到的是以下这段代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'pageshow'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (e.persisted) &#123;</div><div class="line">        <span class="built_in">window</span>.location.reload();</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>愉快的加上这段代码之后，在ios上很好用，然后，其他的就没然后了。。。</p>
+<p>测了一堆发现，不同浏览器，大家的处理方式都不一样的。。。</p>
+<p>秉着学到就是赚到的精神，决定好好研究一下浏览器的后退处理方式</p>
+<h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="BFCache"><a href="#BFCache" class="headerlink" title="BFCache"></a>BFCache</h3><p>BFCache的意思是“后退前进缓存“(back-forward cache)。</p>
+<p>找了好久，都没找找到好的解释BFCache</p>
+<p>相关文章：<br><a href="https://developer.mozilla.org/en-US/docs/Archive/Misc_top_level/Working_with_BFCache" target="_blank" rel="external">Working with BFCache</a></p>
+<p><a href="https://developer.mozilla.org/en-US/Firefox/Releases/1.5/Using_Firefox_1.5_caching" target="_blank" rel="external">Using Firefox 1.5 caching</a></p>
+<blockquote>
+<p>Firefox 1.5 uses in-memory caching for entire Web pages, including their JavaScript states, for a single browser session. Going backward and forward between visited pages requires no page loading and the JavaScript states are preserved. This feature, referred to by some as bfcache (for “Back-Forward Cache”), makes page navigation very fast. This caching state is preserved until the user closes the browser.</p>
+</blockquote>
+<p>渣渣英语，大概翻译意思。firefox会内存缓存整个页面，包括js状态。当点击后退或前进按钮时，原来页面的状态会还原，包括JS改变的DOM结构也会保持，直至浏览器被关闭。</p>
+<h3 id="pageshow事件"><a href="#pageshow事件" class="headerlink" title="pageshow事件"></a>pageshow事件</h3><blockquote>
+<p>当一条会话历史记录被执行的时候将会触发页面显示(pageshow)事件。(这包括了后退/前进按钮操作，同时也会在load事件触发后初始化页面时触发)</p>
+</blockquote>
+<p><code>pageshow</code>事件中带了个属性<code>persisted</code>,用于表明网页是否从缓存中获取（实际上并不是所有浏览器都支持）<br><a href="https://developer.mozilla.org/en-US/docs/Web/API/PageTransitionEvent" target="_blank" rel="external">PageTransitionEvent</a></p>
+<h3 id="window-performance-navigation-type"><a href="#window-performance-navigation-type" class="headerlink" title="window.performance.navigation.type"></a>window.performance.navigation.type</h3><blockquote>
+<p>window.performance.navigation.type 表示触发页面加载的原因。这些原因可能是页面重定向、前进后退按钮或者普通的 URL 加载。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TYPE_NAVIGATE</code></td>
+<td>0</td>
+<td>导航开始于点击链接、或者在用户代理中输入 URL、或者表单提交、或者通过除下表中 <code>TYPE_RELOAD</code> 和 <code>TYPE_BACK_FORWARD</code> 的脚本初始化操作。</td>
+</tr>
+<tr>
+<td><code>TYPE_RELOAD</code></td>
+<td>1</td>
+<td>通过刷新操作或者 <code>location.reload()</code> 方法导航。</td>
+</tr>
+<tr>
+<td><code>TYPE_BACK_FORWARD</code></td>
+<td>2</td>
+<td>通过历史遍历操作导航。</td>
+</tr>
+<tr>
+<td><code>TYPE_UNDEFINED</code></td>
+<td>255</td>
+<td>其他非以上类型的导航。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cache-control"><a href="#cache-control" class="headerlink" title="cache-control"></a><code>cache-control</code></h3><blockquote>
+<p><code>Cache-Control</code> 通用消息头被用于在http 请求和响应中通过指定指令来实现缓存机制。缓存指令是单向的, 这意味着在请求设置的指令，在响应中不一定包含相同的指令。</p>
+</blockquote>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control" target="_blank" rel="external">Cache-Control</a></p>
+<p>禁止缓存:<code>Cache-Control: no-cache, no-store, must-revalidate</code></p>
+<h2 id="各浏览器后退时的处理"><a href="#各浏览器后退时的处理" class="headerlink" title="各浏览器后退时的处理"></a>各浏览器后退时的处理</h2><p>通过测试，总结了以下浏览器在点击后退按钮后回到页面时处理与所触发的事件。</p>
+<table>
+<thead>
+<tr>
+<th>浏览器</th>
+<th>html从服务器取</th>
+<th>html保持上一状态</th>
+<th>js重新执行</th>
+<th>DOMContenctedLoad</th>
+<th>pageShow</th>
+<th>persisted</th>
+<th>navigation.type</th>
+<th>cache-control:no-cache刷新</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mac chrome 63.0.3239.132</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>mac safari 13604.4.7.1.3</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>mac firefox 58.0.1</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>chrome window</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>ieEage window</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>IE10</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>ios safari 603.3.8</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>2</td>
+<td>N</td>
+</tr>
+<tr>
+<td>ios 微信 603.3.8</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>2</td>
+<td>N</td>
+</tr>
+<tr>
+<td>ios牛牛</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>2</td>
+</tr>
+<tr>
+<td>安卓chrome 63.0.3239.111</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>安卓微信</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>安卓牛牛</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>2</td>
+<td>Y</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>除<code>cache-control:no-cache</code>外，其他几项都是在没有对页面设置请求头属性<code>cache-control</code>时做的测试。</li>
+<li>html从服务器取:指html页面的请求头中没有设置<code>Cache-Control</code>时的情况</li>
+<li>html保持上一状态:通过js修改的页面内容，在后退会页面中后，是否还保留</li>
+<li>cache-control:no-cache刷新:给页面的header设上<code>cache-control:no-cache</code>,html是否从服务器中取</li>
+</ul>
+<p>根据上表中的测试结果，满足<code>BFCache</code>的全部条件的，好像只有mac safari 和ios下的浏览器。</p>
+<p>特别注意的是，这些浏览器中，对于定时器的处理，也是离开页面后暂停计时，后退回页面后才继续计时的。即如在14:30的时候访问A页面,这时设置定时器，5分钟后执行，14:31分离开A页面，14:34分后退回到A页面，那定时器的回调将在14:38执行。</p>
+<p>而其他大多数浏览器中，html文件都是直接从缓存中取（在chrome中的开发者模式下设置了disable cache,依然是从缓存中取），js却重新执行。</p>
+<p>IE类则是直接的后退刷新，全部重来</p>
+<p>而<code>pageShow</code>事件，除了不支持该事件的浏览器外，都是会触发这件事的。但事件中的<code>persisted</code>，只有少数浏览器返回<code>true</code>，<strong>所以利用<code>pageShow</code>事件中的<code>e.persisted===true</code>来判断页面是否从缓存中取，并不是在所有浏览器中生效的。</strong></p>
+<p>至于<code>window.performance.navigation.type</code>这是属性值，在后退时，返回的结果都是<code>2</code>。但这只能用于判断页面是否由于历史操作完成，并不能判断是否从缓存取得。</p>
+<p>而对页面的请求头设置<code>cache-control:no-cache,no-store</code>，在ios的浏览器中没有起效（期待的效果应该是页面重新从服务器中加载，但实际效果是页面依旧保持为离开页面是的状态）</p>
+<h2 id="后退刷新"><a href="#后退刷新" class="headerlink" title="后退刷新"></a>后退刷新</h2><h3 id="后退就刷新式的粗暴解决法"><a href="#后退就刷新式的粗暴解决法" class="headerlink" title="后退就刷新式的粗暴解决法"></a>后退就刷新式的粗暴解决法</h3><p>只要监测到页面是通过后退加载的，那就直接执行<code>window.location.reload()</code>，那利用<code>window.performance.navigation.type</code>属性值就好啦。但是呢，后退时，有部分浏览器是不会再执行js代码的，所以需要将<code>navigation.type</code>的判断放在一些监听事件中。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'pageshow'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">window</span>.performance &amp;&amp; </div><div class="line">        <span class="built_in">window</span>.performance.navigation.type === <span class="number">2</span>) &#123;</div><div class="line">        <span class="built_in">window</span>.location.reload();</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>额，亲测，其实使用<code>reload()</code>的话，会明显感觉到页面有刷新的过程的。</p>
+<h3 id="强制从服务器中加载页面"><a href="#强制从服务器中加载页面" class="headerlink" title="强制从服务器中加载页面"></a>强制从服务器中加载页面</h3><p>使用<code>cache-control:no-cache,no-store</code>,强制从服务器中加载页面<br>前面也说了，这种方式在ios的浏览器中是无效的，但是呢，ios中的浏览器好像是支持<code>BFCache</code>的，即后退返回页面看到的内容，就是离开页面时的内容。其实这种情况已经可以满足绝大多数的场景了。感觉可以使用。</p>
+<p>但对于某些场景就可能体验不好了。<br>如A页面是需要登录态的页面，然后从A页面离开后，进入B页面，在B页面退出了登录，再后退返回A页面时，在支持<code>BFCache</code>的浏览器中，A页面还是展示为原来的样子，但实际上，我们想要的是，重定向到登录页。</p>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.0" async></script><a data-url="http://dingxx.im/2018/02/07/browser-back-handle/" data-id="cjdeavdcy0000xgavbo2o1fmv" class="article-share-link">分享</a><div class="tags"><a href="/tags/JS/">JS</a></div><div class="post-nav"><a href="/2018/01/30/vibrate/" class="next">Navigator.vibrate 手机振动</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JS/" style="font-size: 15px;">JS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/JS-API/" style="font-size: 15px;">JS_API</a> <a href="/tags/tech/" style="font-size: 15px;">技术</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/02/07/browser-back-handle/">不同浏览器后退处理方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/vibrate/">Navigator.vibrate 手机振动</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/18/webpack3-primary-learning/">webpack3初级学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/29/merge-vs-rebase/">merge-vs-rebase</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/08/hexo-blog/">用hexo搭建blog(简单版)</a></li></ul></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">cynthia'blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
