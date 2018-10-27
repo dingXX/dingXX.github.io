@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>git diff | cynthia'blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">git diff</h1><a id="logo" href="/.">cynthia'blog</a><p class="description">她很懒，什么都没有留下</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">git diff</h1><div class="post-meta">Sep 6, 2018<script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><blockquote>
+<p>显示工作树与索引或树之间的更改，索引与树之间的更改，两个树之间的更改，两个blob对象之间的更改或磁盘上两个文件之间的更改</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">git diff</div><div class="line"></div><div class="line"><span class="comment"># 效果</span></div><div class="line">diff --git a/a.txt b/a.txt  <span class="comment"># 有差异的文件名</span></div><div class="line">index 4e9c773..b6e6d12 100644</div><div class="line">--- a/a.txt</div><div class="line">+++ b/a.txt</div><div class="line">@@ -1,4 +1,5 @@</div><div class="line"> C0的改动</div><div class="line"> C1的改动</div><div class="line"> C2的改动</div><div class="line">+在master上对a.txt的第一次修改 <span class="comment"># 在原基础上添加的内容</span></div><div class="line"> C3的改动</div><div class="line">diff --git a/master.txt b/master.txt</div><div class="line">index 117bc70..4c556ad 100644</div><div class="line">--- a/master.txt  <span class="comment"># 在原基础上删减的内容</span></div><div class="line">+++ b/master.txt</div><div class="line">@@ -1 +1,2 @@</div><div class="line">+master的第二次提交</div><div class="line"> master的第一次提交</div></pre></td></tr></table></figure>
+<h2 id="查看工作目录-暂存区-git仓库中的文件差异"><a href="#查看工作目录-暂存区-git仓库中的文件差异" class="headerlink" title="查看工作目录/暂存区/git仓库中的文件差异"></a>查看工作目录/暂存区/git仓库中的文件差异</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>单个文件的差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git diff</code></td>
+<td>工作目录中当前文件和暂存区快照之间的差异，即修改之后但没有暂存起来（<code>git add</code>）的变化内容</td>
+<td><code>git diff fileName</code></td>
+</tr>
+<tr>
+<td><code>git diff --cached</code>或 <code>git diff --staged</code></td>
+<td>查看已经暂存快照(如果该文件有未暂存的内容，是不会展示的)与git仓库的差异</td>
+<td><code>git diff --cached fileName</code> (<code>--cached</code>要在fileName之前)</td>
+</tr>
+<tr>
+<td><code>git diff commitSHA</code></td>
+<td>工作目录与git仓库之间的差异</td>
+<td><code>git diff HEAD fileName</code>(commitSHA 要在fileName之前)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>例子</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 修改master.txt文件，添加一句“master的第二次提交”</span></div><div class="line"><span class="comment"># 修改a.txt文件，添加一句“在master上对a.txt的第一次修改”</span></div><div class="line"><span class="comment"># 将以上的改动暂存（git add .）</span></div><div class="line">git add .</div><div class="line"></div><div class="line"><span class="comment"># 再修改master.txt文件，添加一句“master上的第二次提交的第二次修改”</span></div><div class="line"></div><div class="line"><span class="comment"># 执行git diff</span></div><div class="line">git diff</div><div class="line"></div><div class="line"><span class="comment"># 效果 （这里对比的是工作目录和暂存区快照之间的差异）</span></div><div class="line">diff --git a/master.txt b/master.txt</div><div class="line">index 4c556ad..d936d60 100644</div><div class="line">--- a/master.txt</div><div class="line">+++ b/master.txt</div><div class="line">@@ -1,2 +1,3 @@</div><div class="line">+master上的第二次提交的第二次修改</div><div class="line"> master的第二次提交</div><div class="line"> master的第一次提交</div><div class="line"></div><div class="line"><span class="comment"># 执行git diff --cached</span></div><div class="line">git diff --cached</div><div class="line"></div><div class="line"><span class="comment"># 效果 (这里对比的是暂存快照与git仓库之间的差异)</span></div><div class="line">diff --git a/a.txt b/a.txt</div><div class="line">index 4e9c773..b6e6d12 100644</div><div class="line">--- a/a.txt</div><div class="line">+++ b/a.txt</div><div class="line">@@ -1,4 +1,5 @@</div><div class="line"> C0的改动</div><div class="line"> C1的改动</div><div class="line"> C2的改动</div><div class="line">+在master上对a.txt的第一次修改</div><div class="line"> C3的改动</div><div class="line">diff --git a/master.txt b/master.txt</div><div class="line">index 117bc70..4c556ad 100644</div><div class="line">--- a/master.txt</div><div class="line">+++ b/master.txt</div><div class="line">@@ -1 +1,2 @@</div><div class="line">+master的第二次提交</div><div class="line"> master的第一次提交</div><div class="line"></div><div class="line"><span class="comment"># 执行git diff HEAD</span></div><div class="line">git diff HEAD</div><div class="line"></div><div class="line"><span class="comment"># 效果 （这里是对比的是工作目录与当前提交仓库之间的差异）</span></div><div class="line">▶ g diff --cached</div><div class="line">diff --git a/a.txt b/a.txt</div><div class="line">index 4e9c773..b6e6d12 100644</div><div class="line">--- a/a.txt</div><div class="line">+++ b/a.txt</div><div class="line">@@ -1,4 +1,5 @@</div><div class="line"> C0的改动</div><div class="line"> C1的改动</div><div class="line"> C2的改动</div><div class="line">+在master上对a.txt的第一次修改</div><div class="line"> C3的改动</div><div class="line">diff --git a/master.txt b/master.txt</div><div class="line">index 117bc70..d936d60 100644</div><div class="line">--- a/master.txt</div><div class="line">+++ b/master.txt</div><div class="line">@@ -1 +1,3 @@</div><div class="line">+master上的第二次提交的第二次修改</div><div class="line">+master的第二次提交</div><div class="line"> master的第一次提交</div></pre></td></tr></table></figure>
+<h2 id="查看git仓库间的差异"><a href="#查看git仓库间的差异" class="headerlink" title="查看git仓库间的差异"></a>查看git仓库间的差异</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>单个文件的差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git diff commit1 commit2</code></td>
+<td>是以commit1为基础，变成commit2状态时做的操作差异</td>
+<td><code>git diff commit1 commit2 fileName</code> 查看fileName的不同版本间的差异</td>
+</tr>
+<tr>
+<td><code>git diff commit1:fileName commit2:fileName</code></td>
+<td>查看不同git版本下文件的差异（可以是不同的文件）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="查看分支间的差异"><a href="#查看分支间的差异" class="headerlink" title="查看分支间的差异"></a>查看分支间的差异</h2><blockquote>
+<p>类似于查看git仓库间的差异，取的是分支中的最新提交的git仓库进行比较，不包括暂存或修改的内容</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>单个文件的差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git diff BranchA BranchB</code></td>
+<td>是以BranchA为基础，变成BranchB状态要做的操作差异</td>
+<td><code>git diff BranchA BranchB fileName</code> 查看fileName文件在不同的分支上的差异</td>
+</tr>
+<tr>
+<td><code>git diff BranchA</code></td>
+<td>相当于<code>git diff BranchA nowBranch</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="合并冲突时查看差异"><a href="#合并冲突时查看差异" class="headerlink" title="合并冲突时查看差异"></a>合并冲突时查看差异</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>单个文件的差异</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git diff</code></td>
+<td>展示冲突的内容</td>
+<td><code>git diff FileName</code></td>
+</tr>
+<tr>
+<td><code>git diff --ours</code></td>
+<td>以本分支的基点，查看与目前的冲突文件的冲突</td>
+<td><code>git diff --ours fileName</code></td>
+</tr>
+<tr>
+<td><code>git diff --theirs</code></td>
+<td>以合并进来的分支的基点，查看与目前的冲突文件的冲突</td>
+<td><code>git diff --ours fileName</code></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 在branchB 分支下 </span></div><div class="line"><span class="comment"># 执行合并BranchA的操作</span></div><div class="line">git merge BranchA</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">git diff</div><div class="line"><span class="comment"># 执行git diff得出的结果</span></div><div class="line">@@@ -1,3 -1,3 +1,8 @@@</div><div class="line">  C6的改动</div><div class="line">++&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</div><div class="line"> +</div><div class="line"> +在branchB分支下对o.txt的第一次修改</div><div class="line">++=======</div><div class="line">+ 在BranchA分支下对o.txt的第一次修改</div><div class="line">+ 在branchA分支下对o.txt的第二次修改</div><div class="line">++&gt;&gt;&gt;&gt;&gt;&gt;&gt; BranchA</div><div class="line"></div><div class="line">git diff --ours</div><div class="line"><span class="comment"># 执行git diff --ours 得到的结果</span></div><div class="line">@@ -1,3 +1,8 @@</div><div class="line"> C6的改动</div><div class="line">+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</div><div class="line"></div><div class="line"> 在branchB分支下对o.txt的第一次修改</div><div class="line">+=======</div><div class="line">+在BranchA分支下对o.txt的第一次修改</div><div class="line">+在branchA分支下对o.txt的第二次修改</div><div class="line">+&gt;&gt;&gt;&gt;&gt;&gt;&gt; BranchA</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">git diff --theirs</div><div class="line"><span class="comment"># 执行git diff --theirs得到的结果</span></div><div class="line">@@ -1,3 +1,8 @@</div><div class="line"> C6的改动</div><div class="line">+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</div><div class="line">+</div><div class="line">+在branchB分支下对o.txt的第一次修改</div><div class="line">+=======</div><div class="line"> 在BranchA分支下对o.txt的第一次修改</div><div class="line"> 在branchA分支下对o.txt的第二次修改</div><div class="line">+&gt;&gt;&gt;&gt;&gt;&gt;&gt; BranchA</div></pre></td></tr></table></figure>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.0" async></script><a data-url="http://dingxx.im/2018/09/06/git-diff/" data-id="cjnqs77kr000ctvavkao43ni7" class="article-share-link">分享</a><div class="tags"><a href="/tags/git/">git</a></div><div class="post-nav"><a href="/2018/09/13/git-checkout-reset-revert/" class="pre">git-代码重置</a><a href="/2018/08/30/git-log/" class="next">git log</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JS/" style="font-size: 15px;">JS</a> <a href="/tags/js/" style="font-size: 15px;">js</a> <a href="/tags/JS-API/" style="font-size: 15px;">JS_API</a> <a href="/tags/tech/" style="font-size: 15px;">技术</a> <a href="/tags/flowChart/" style="font-size: 15px;">flowChart</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/13/git-checkout-reset-revert/">git-代码重置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/06/git-diff/">git diff</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/30/git-log/">git log</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/15/create-snapshot/">web前端生成分享快照方式总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/flowchart-to-image/">markdown画流程图并生成图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/this/">对js中的this理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/primitive-and-reference-values/">js中的基本类型与引用类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/deviceorientation-devicemotion/">设备屏幕方向与运动</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/07/browser-back-handle/">不同浏览器后退处理方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/vibrate/">Navigator.vibrate 手机振动</a></li></ul></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">cynthia'blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>git log | cynthia'blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">git log</h1><a id="logo" href="/.">cynthia'blog</a><p class="description">她很懒，什么都没有留下</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">git log</h1><div class="post-meta">Aug 30, 2018<script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><h2 id="git-log简单使用"><a href="#git-log简单使用" class="headerlink" title="git log简单使用"></a><code>git log</code>简单使用</h2><p><code>git log</code>主要是用于<strong>查看历史提交</strong></p>
+<p>通过直接在git项目的命令行中输入<code>git log</code>，能查看到<strong>当前分支</strong>的历史提交记录<br>这是按提交时间排序的，最近的更新排在最上面，列出每个提交的相关信息（如 SHA-1校验和、作者名称、邮箱、时间、提交说明）</p>
+<a id="more"></a>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">log</span></div><div class="line"></div><div class="line">commit 42f767871b05d8664f1d8f2518c775e73d5046f0</div><div class="line">Merge: 8d7dc9a 7e0d34f</div><div class="line">Author: dingxx &lt;632***025@qq.com&gt;</div><div class="line">Date:   Tue Jul 4 20:57:57 2017 +0800</div><div class="line"></div><div class="line">    merge C8</div><div class="line"></div><div class="line">commit 8d7dc9afd737510a261425b94bb6ac39e1cdd8bc</div><div class="line">Author: dingxx &lt;632***025@qq.com&gt;</div><div class="line">Date:   Tue Jul 4 20:54:10 2017 +0800</div><div class="line"></div><div class="line">    C3</div></pre></td></tr></table></figure>
+<h2 id="git-log-的参数"><a href="#git-log-的参数" class="headerlink" title="git log 的参数"></a><code>git log 的参数</code></h2><p>当然，上面这种是不带参数的情况，实际上<code>git log</code>命令有许多常用的参数选项，以便更容易满足大家的需求</p>
+<h3 id="控制git-log数据展示的的参数"><a href="#控制git-log数据展示的的参数" class="headerlink" title="控制git log数据展示的的参数"></a>控制<code>git log</code>数据展示的的参数</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-p</code></td>
+<td>显示每次提交的内容差异</td>
+<td><code>git log -p</code></td>
+</tr>
+<tr>
+<td><code>--stat</code></td>
+<td>显示每次提交的简略统计信息</td>
+<td><code>git log --stat</code></td>
+</tr>
+<tr>
+<td><code>--pretty=</code></td>
+<td>不同的形式显示log</td>
+<td><code>git log --pretty=short</code> (<code>oneline/full/fuller</code>/format:”%h - %an,%ar:%s”)</td>
+</tr>
+<tr>
+<td><code>--graph</code></td>
+<td>图形展示分支、合并历史</td>
+<td><code>git log --graph</code></td>
+</tr>
+<tr>
+<td><code>--abbrev-commit</code></td>
+<td>只显示SHA-1的前几个字符</td>
+<td><code>git log --abbrev-commit</code></td>
+</tr>
+<tr>
+<td><code>--relative-date</code></td>
+<td>时间信息用相对时间</td>
+<td><code>git log --relative-date</code> 时间展示为：2 months ago</td>
+</tr>
+<tr>
+<td><code>--name-only</code></td>
+<td>展示该提交中被提交的文件清单</td>
+<td><code>git log --name-only</code>  a.txt</td>
+</tr>
+<tr>
+<td><code>--name-status</code></td>
+<td>展示该提交中被提交的文件清单加对应的操作</td>
+<td><code>git log --name-status</code> M a.txt</td>
+</tr>
+</tbody>
+</table>
+<h3 id="git-log-pretty-format中的format的常用选项"><a href="#git-log-pretty-format中的format的常用选项" class="headerlink" title="git log --pretty=format中的format的常用选项"></a><code>git log --pretty=format</code>中的<code>format</code>的常用选项</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>说明</th>
+<th>其他</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%H</code></td>
+<td>提交对象（commit）的完整的SHA-1</td>
+<td><code>%h</code>简短SHA-1</td>
+</tr>
+<tr>
+<td><code>%T</code></td>
+<td>树对象（tree）的完整SHA-1</td>
+<td><code>%t</code>简短SHA-1</td>
+</tr>
+<tr>
+<td><code>%P%</code></td>
+<td>父对象（parent）的完整SHA-1</td>
+<td><code>%p</code>简短SHA-1</td>
+</tr>
+<tr>
+<td><code>%an</code></td>
+<td>作者名字</td>
+<td><code>%cn</code>为提交者名字</td>
+</tr>
+<tr>
+<td><code>%ae</code></td>
+<td>作者邮箱</td>
+<td><code>ce</code>为提交者邮箱</td>
+</tr>
+<tr>
+<td><code>%ad</code></td>
+<td>作者修订时间</td>
+<td><code>%ar</code>按多久以前的方式显示</td>
+</tr>
+<tr>
+<td><code>%cd</code></td>
+<td>提交日期</td>
+<td><code>%cr</code>按多久以前的方式显示</td>
+</tr>
+<tr>
+<td><code>%s</code></td>
+<td>提交说明</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>作者</strong>：实际作出修改的人； <strong>提交者</strong>将工作成果提交到仓库的人</p>
+</blockquote>
+<p><strong>栗子</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">log</span> --pretty=<span class="string">"%h - %an (%ar): %s"</span></div><div class="line"><span class="comment"># 或</span></div><div class="line">git <span class="built_in">log</span> --pretty=format:<span class="string">"%h - %an (%ar): %s"</span></div><div class="line"></div><div class="line"><span class="comment"># 效果</span></div><div class="line">63cfeeb - cynthia (2 days ago): master的第一次提交</div><div class="line"></div><div class="line"><span class="comment"># 可以在前面加上%C(color)，以带颜色展示log</span></div><div class="line"><span class="comment"># 能设置的颜色值包括：reset（默认的灰色），normal, black, red, green, yellow, blue, magenta, cyan, white</span></div><div class="line">git <span class="built_in">log</span> --pretty=format:<span class="string">"%C(red)%h - %C(yellow)%an (%ar): %C(blue)%s"</span></div></pre></td></tr></table></figure>
+<h3 id="控制git-log输出的参数"><a href="#控制git-log输出的参数" class="headerlink" title="控制git log输出的参数"></a>控制<code>git log</code>输出的参数</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-(n)</code></td>
+<td>仅展示最近的n条数据</td>
+<td><code>git log -10</code> 只展示最近的10条数据</td>
+</tr>
+<tr>
+<td><code>--since</code>、<code>--after</code></td>
+<td>显示指定时间<strong>之后</strong>的提交</td>
+<td><code>git log --since=2weeks</code>两周内的提交记录</td>
+</tr>
+<tr>
+<td><code>--until</code>、<code>--before</code></td>
+<td>显示指定时间<strong>之前</strong>的提交</td>
+<td><code>git log --until=2weeks</code>两周内的提交记录</td>
+</tr>
+<tr>
+<td><code>--author</code></td>
+<td>指定作者</td>
+<td><code>git log --author=cynthia</code></td>
+</tr>
+<tr>
+<td><code>--committer</code></td>
+<td>指定提交者相关</td>
+<td><code>git log --committer</code></td>
+</tr>
+<tr>
+<td><code>--grep</code></td>
+<td>带关键字查(只是对提交信息内容的关键字)</td>
+<td><code>git log --grep=keywork</code></td>
+</tr>
+<tr>
+<td><code>-Sfunciton_name</code></td>
+<td>列出那些添加或移除了某些字符串的提交(没有空格)</td>
+<td><code>git log -S改动</code> 提交的具体内容中包含“改动”两字的提交历史</td>
+</tr>
+<tr>
+<td><code>--merge</code></td>
+<td>显示任何一边接触了合并冲突文件的提交（在冲突时可用）</td>
+<td><code>git log --oneline --left-right --merge</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="git-log的高级使用"><a href="#git-log的高级使用" class="headerlink" title="git log的高级使用"></a><code>git log</code>的高级使用</h2><h3 id="文件级别的提交历史查询"><a href="#文件级别的提交历史查询" class="headerlink" title="文件级别的提交历史查询"></a>文件级别的提交历史查询</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git log pathName</code></td>
+<td>某些文件或者目录的历史提交</td>
+<td><code>git log a.txt</code> 查看<code>a.txt</code>的提交历史</td>
+</tr>
+<tr>
+<td><code>git log -L :functionname:fileName</code></td>
+<td>查看filename中的fuctionname的历史记录</td>
+<td><code>git log -L :改动:a.txt</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="分支间的提交历史查询"><a href="#分支间的提交历史查询" class="headerlink" title="分支间的提交历史查询"></a>分支间的提交历史查询</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git log BranchA</code></td>
+<td>查看A分支的提交历史</td>
+<td></td>
+</tr>
+<tr>
+<td><code>git log BranchA BranchB</code></td>
+<td>查看A分支或者B分支的提交（取并集）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>git log ^BranchA BranchB</code></td>
+<td>A分支没有，B分支有的</td>
+<td></td>
+</tr>
+<tr>
+<td><code>git log BranchA BranchB --not BranchC</code></td>
+<td>被A分支或B分支包含，但不被C分支包含的提交</td>
+<td></td>
+</tr>
+<tr>
+<td><code>git log BranchA..BranchB</code></td>
+<td>查看B分支有，但A分支没有的提交</td>
+<td><code>git log BranchA..BranchB</code> == <code>git log ^BranchA BranchB</code></td>
+</tr>
+<tr>
+<td><code>git log BranchA...BranchB</code></td>
+<td>A分支或B分支有，但不是两者共有的提交</td>
+<td><code>--left-right</code>可显示每个提交属于哪一侧分支</td>
+</tr>
+</tbody>
+</table>
+<h2 id="git-reflog"><a href="#git-reflog" class="headerlink" title="git reflog"></a><code>git reflog</code></h2><blockquote>
+<p>当你 (在一个仓库下) 工作时，Git 会在你每次修改了 HEAD 时悄悄地将改动记录下来。当你提交或修改分支时，reflog 就会更新</p>
+</blockquote>
+<p>用于找回一些不被分支引用的提交记录？</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">git reflog</div><div class="line"></div><div class="line"><span class="comment"># 效果</span></div><div class="line">63cfeeb HEAD@&#123;0&#125;: commit: master的第一次提交</div><div class="line">42f7678 HEAD@&#123;1&#125;: checkout: moving from branchB to master</div></pre></td></tr></table></figure>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.0" async></script><a data-url="http://dingxx.im/2018/08/30/git-log/" data-id="cjnqs77kt000etvavj929wwpo" class="article-share-link">分享</a><div class="tags"><a href="/tags/git/">git</a></div><div class="post-nav"><a href="/2018/09/06/git-diff/" class="pre">git diff</a><a href="/2018/06/15/create-snapshot/" class="next">web前端生成分享快照方式总结</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JS/" style="font-size: 15px;">JS</a> <a href="/tags/js/" style="font-size: 15px;">js</a> <a href="/tags/JS-API/" style="font-size: 15px;">JS_API</a> <a href="/tags/tech/" style="font-size: 15px;">技术</a> <a href="/tags/flowChart/" style="font-size: 15px;">flowChart</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/13/git-checkout-reset-revert/">git-代码重置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/06/git-diff/">git diff</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/30/git-log/">git log</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/15/create-snapshot/">web前端生成分享快照方式总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/flowchart-to-image/">markdown画流程图并生成图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/this/">对js中的this理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/primitive-and-reference-values/">js中的基本类型与引用类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/deviceorientation-devicemotion/">设备屏幕方向与运动</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/07/browser-back-handle/">不同浏览器后退处理方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/vibrate/">Navigator.vibrate 手机振动</a></li></ul></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">cynthia'blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

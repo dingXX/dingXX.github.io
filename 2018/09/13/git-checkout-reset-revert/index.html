@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>git-代码重置 | cynthia'blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">git-代码重置</h1><a id="logo" href="/.">cynthia'blog</a><p class="description">她很懒，什么都没有留下</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">git-代码重置</h1><div class="post-meta">Sep 13, 2018<script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><p>平时写代码的时候，经常会遇到以下的情景</p>
+<ol>
+<li>修改了一大堆内容，然后都不想要了，想变回初始状态（还没有commit到本地仓库）</li>
+<li>一不小心将不想要的代码commit到本地仓库了，但幸好还没有push到远程仓库</li>
+<li>将代码push到远程仓库后，发现代码有问题，需要还原为原来正常的情况</li>
+</ol>
+<p>对于以上这些情况，需要我们对代码进行重置，回到某种状态。而一些git命令（如<code>git checkout</code>、<code>git reset</code>、<code>git revert</code>）都能很好的帮我们对代码进行重置。</p>
+<p>但对于小编来说，经常搞不清这三个命令之间关系，也不太清楚对应命令执行后的效果是啥，导致不能在合适的时候使用合适的git命令，所以这里想好好梳理一下这三个命令操作的表现~</p>
+<h2 id="git项目工作区与文件状态"><a href="#git项目工作区与文件状态" class="headerlink" title="git项目工作区与文件状态"></a>git项目工作区与文件状态</h2><p>git 项目中有三个工作区域：git仓库、工作目录、暂存区域</p>
+<ul>
+<li>git仓库： 文件已经被commit后，会更新到git仓库中</li>
+<li>工作目录: 只当前打开文件看到的样子</li>
+<li>暂存区域： 文件被<code>git add</code>了，但没有<code>git commit</code>（预期下次提交的样子）<br><img src="/images/git-goback/git-work.png" alt="工作目录、暂存区域以及 Git 仓库"></li>
+</ul>
+<p>文件也有对应的状态<br><img src="/images/git-goback/file-work.png" alt="工作目录、暂存区域以及 Git 仓库"></p>
+<ul>
+<li>未跟踪（untracked）: 文件不在git仓库中或暂存区域中（新建的文件）</li>
+<li>未修改(unmodified)/已提交（committed）: 文件存在git仓库中的样子</li>
+<li>已修改（modified）: 文件在工作目录中被修改过的样子</li>
+<li>已暂存（staged）: 文件在暂存区的样子</li>
+</ul>
+<h2 id="提交层面的重置"><a href="#提交层面的重置" class="headerlink" title="提交层面的重置"></a>提交层面的重置</h2><blockquote>
+<p>这里主要是指将git项目中的工作目录变成某个提交记录时的快照样子</p>
+</blockquote>
+<p><strong>注意：</strong> </p>
+<ul>
+<li>提交层面是指所有文件都回到对应提交记录时的样子</li>
+<li>这里说的撤销不代表说将提交历史的回退，只是保证当前<strong>工作目录</strong>的文件是预期的样子</li>
+</ul>
+<p><code>git checkout</code>、<code>git reset</code>、<code>git revert</code>三者都能实现回滚到对应的提交记录时的样子</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>细节</th>
+<th>是否重写历史</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git checkout [commit]</code></td>
+<td>将HEAD指针移到对应的commit中</td>
+<td>此时分支没有移动，导致HEAD处于分离状态（HEAD没有被任何分支引用）</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>git reset [commit]</code></td>
+<td>将HEAD和当前分支指针移动到对应的commit中</td>
+<td>当前还是处于分支中的</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>git revert [commit]</code></td>
+<td>将[commit]的修改撤销，回到[commit]的父提交时的样子</td>
+<td>在原提交历史的基础上，新增一个还原的commit</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<h3 id="已修改状态下的重置"><a href="#已修改状态下的重置" class="headerlink" title="已修改状态下的重置"></a>已修改状态下的重置</h3><p><strong>场景1</strong> </p>
+<blockquote>
+<p>在[commit1]下的文件状态为A1{已提交}，对某些文件做了修改，当前文件内容为A2，但没有做<code>git add</code>操作，（即git仓库为A1,工作目录为A2,暂存区为A1）），现在想回到A1状态</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 方法1</span></div><div class="line">git checkout . <span class="comment"># 将所有已跟踪的文件的修改去除</span></div><div class="line">git clean -df  <span class="comment"># 将所有未跟踪的文件的修改去除</span></div><div class="line"></div><div class="line"><span class="comment"># 方法2</span></div><div class="line">git reset --hard <span class="comment"># 使用reset方法和--hard 参数，连工作目录中的状态都变回HEAD时的样子</span></div></pre></td></tr></table></figure>
+<h3 id="已暂存状态下的重置"><a href="#已暂存状态下的重置" class="headerlink" title="已暂存状态下的重置"></a>已暂存状态下的重置</h3><p><strong>场景1</strong></p>
+<blockquote>
+<p>在[commit1]下的文件状态为A1{已提交}，对某些文件做了修改，当前文件内容为A2，然后做了<code>git add</code>操作后（即git仓库为A1,工作目录为A2,暂存区为A2），想回到A1状态</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 方法1</span></div><div class="line">git reset HEAD <span class="comment"># 将所有暂存状态变回为已修改状态(git仓库为A1,工作目录为A2,暂存区为A1)</span></div><div class="line">git checkout .</div><div class="line">git clean -df <span class="comment"># 再将已修改的内容去除(git仓库为A1,工作目录为A1,暂存区为A1)</span></div><div class="line"></div><div class="line"><span class="comment"># 方法2</span></div><div class="line"></div><div class="line">git reset --hard <span class="comment"># 使用reset方法和--hard 参数，连工作目录中的状态都变回HEAD时的样子</span></div></pre></td></tr></table></figure>
+<p><strong>场景2</strong></p>
+<blockquote>
+<p>在[commit1]下的文件状态为A1{已提交}，对某些文件做了修改，当前文件内容为A2，然后做了<code>git add</code>操作后，又对文件进行了修改，内容为A3 （即git仓库为A1,工作目录为A3,暂存区为A2），想将所有都变回A1</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 方法1</span></div><div class="line">git reset HEAD <span class="comment">#(git仓库为A1,工作目录为A3,暂存区为A1)</span></div><div class="line">git checkout .</div><div class="line">git clean -df <span class="comment">#(git仓库为A1,工作目录为A1,暂存区为A1)</span></div><div class="line"></div><div class="line"><span class="comment"># 方法2</span></div><div class="line">git reset --hard <span class="comment"># 使用reset方法和--hard 参数，连工作目录中的状态都变回HEAD时的样子</span></div></pre></td></tr></table></figure>
+<h3 id="已提交状态下的重置"><a href="#已提交状态下的重置" class="headerlink" title="已提交状态下的重置"></a>已提交状态下的重置</h3><p><strong>场景1</strong></p>
+<blockquote>
+<p>在[commit1]下的文件状态为A1{已提交},对某些文件做了修改后，执行<code>git add</code>和<code>git commit</code>，将修改内容提交，生成新的[commit2],文件状态为A2{已提交}（即git仓库为A2,工作目录为A2,暂存区为A2），想将所有的都变回A1</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 方法1</span></div><div class="line">git reset [commit1] <span class="comment">#(git仓库为A1,工作目录为A2,暂存区为A1) ,HEAD指向[commit1]，commit2处于游离状态</span></div><div class="line">git clean -df </div><div class="line">git checkout . <span class="comment">#(git仓库为A1,工作目录为A1,暂存区为A1) HEAD指向[commit1]</span></div><div class="line"></div><div class="line"><span class="comment"># 方法2</span></div><div class="line">git reset [commit1] --soft <span class="comment">#(git仓库为A1,工作目录为A2,暂存区为A2),HEAD指向[commit1]，commit2处于游离状态</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 方法3</span></div><div class="line">git reset --hard <span class="comment">#(git仓库为A1,工作目录为A1,暂存区为A1) HEAD指向[commit1]</span></div><div class="line"></div><div class="line"><span class="comment"># 方法4 (如果[commit2]已推送到远程分支的，用git revert会比较好，提交历史会比较清晰一些)</span></div><div class="line">git revert [commit2] <span class="comment"># 执行这个后会有个提交的操作[commit3]，(git仓库为A1,工作目录为A1,暂存区为A1) HEAD指向[commit3]</span></div></pre></td></tr></table></figure>
+<h2 id="文件层面的重置"><a href="#文件层面的重置" class="headerlink" title="文件层面的重置"></a>文件层面的重置</h2><p><code>git checkout</code>和<code>git reset</code>命令接受文件路径作为参数，对单个文件进行操作。但<code>git revert</code>只能对提交操作</p>
+<h3 id="文件已修改状态下的重置"><a href="#文件已修改状态下的重置" class="headerlink" title="文件已修改状态下的重置"></a>文件已修改状态下的重置</h3><p><strong>场景1</strong></p>
+<blockquote>
+<p>在[commit1]的提交下，文件A的内容为A1，然后对文件A进行修改，变为A2，（A文件的状态：git仓库为A1,工作目录为A2,暂存区为A1），需要变回A1</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 如果文件A已被跟踪</span></div><div class="line">git checkout fileNameA </div><div class="line"><span class="comment"># 如果文件A没有被跟踪过，（新建的文件）</span></div><div class="line">git clean -df fileNameA <span class="comment"># （A文件的状态：git仓库为A1,工作目录为A1,暂存区为A1）HEAD指向[commit1]</span></div></pre></td></tr></table></figure>
+<h3 id="文件已暂存状态下的重置"><a href="#文件已暂存状态下的重置" class="headerlink" title="文件已暂存状态下的重置"></a>文件已暂存状态下的重置</h3><p><strong>场景</strong></p>
+<blockquote>
+<p>在[commit1]的提交下，文件A的内容为A1，然后对文件A进行修改，变为A2，并将修改暂存了（<code>git add</code>）（A文件的状态：git仓库为A1,工作目录为A2,暂存区为A2），需要变回A1</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git reset HEAD fileNameA <span class="comment">#(A文件的状态：git仓库为A1,工作目录为A2,暂存区为A1）HEAD指向[commit1]</span></div><div class="line">git checkout fileNameA <span class="comment"># （A文件的状态：git仓库为A1,工作目录为A1,暂存区为A1）HEAD指向[commit1]</span></div></pre></td></tr></table></figure>
+<h3 id="文件已提交状态下的重置"><a href="#文件已提交状态下的重置" class="headerlink" title="文件已提交状态下的重置"></a>文件已提交状态下的重置</h3><p><strong>场景</strong></p>
+<blockquote>
+<p>在[commit1]的提交下，文件A的内容为A1，然后对文件A进行修改，变为A2，并将修改提交了[commit2]（A文件的状态：git仓库为A2,工作目录为A2,暂存区为A2;HEAD指向[commit2]）</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git reset [commit1] fileNameA <span class="comment">#(A文件的状态：git仓库为A2,工作目录为A2,暂存区为A1）HEAD指向[commit2]</span></div><div class="line">git checkout fileNameA <span class="comment">#(A文件的状态：git仓库为A2,工作目录为A2,暂存区为A1）HEAD指向[commit2]</span></div></pre></td></tr></table></figure>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.0" async></script><a data-url="http://dingxx.im/2018/09/13/git-checkout-reset-revert/" data-id="cjnqs77kq0009tvavcby5gxji" class="article-share-link">分享</a><div class="tags"><a href="/tags/git/">git</a></div><div class="post-nav"><a href="/2018/09/06/git-diff/" class="next">git diff</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/JS/" style="font-size: 15px;">JS</a> <a href="/tags/js/" style="font-size: 15px;">js</a> <a href="/tags/JS-API/" style="font-size: 15px;">JS_API</a> <a href="/tags/tech/" style="font-size: 15px;">技术</a> <a href="/tags/flowChart/" style="font-size: 15px;">flowChart</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/13/git-checkout-reset-revert/">git-代码重置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/06/git-diff/">git diff</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/30/git-log/">git log</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/15/create-snapshot/">web前端生成分享快照方式总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/23/flowchart-to-image/">markdown画流程图并生成图片</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/this/">对js中的this理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/primitive-and-reference-values/">js中的基本类型与引用类型</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/12/deviceorientation-devicemotion/">设备屏幕方向与运动</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/07/browser-back-handle/">不同浏览器后退处理方式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/vibrate/">Navigator.vibrate 手机振动</a></li></ul></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">cynthia'blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
