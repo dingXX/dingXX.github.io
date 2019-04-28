@@ -349,6 +349,8 @@ div {
 /* for archive page ends*/
 /* middle*/
 @media print, screen and (max-width: 48em) {
+  .toc-fixed {
+    display: none !important; }
   .body_container {
     padding: 0 30px; }
   .content_container {
@@ -1397,6 +1399,18 @@ figure.highlight,
       color: #222; }
 
 /* toc*/
+.toc-fixed {
+  position: fixed;
+  right: 25%;
+  transform: translateX(100%);
+  width: 20%;
+  bottom: 100px;
+  background-color: #fff;
+  display: none; }
+
+.toc-fixed.show {
+  display: block; }
+
 .toc-article {
   border: 1px solid #bbb;
   border-radius: 7px;
