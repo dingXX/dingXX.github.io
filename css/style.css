@@ -1399,14 +1399,25 @@ figure.highlight,
       color: #222; }
 
 /* toc*/
-.toc-fixed {
+.fix-wrap {
   position: fixed;
-  right: 25%;
-  transform: translateX(100%);
-  width: 20%;
+  max-width: 1150px;
+  margin: 0 auto;
   bottom: 100px;
+  left: 0;
+  right: 0;
+  padding: 0 60px;
+  pointer-events: none; }
+
+.toc-fixed {
+  width: 20%;
   background-color: #fff;
-  display: none; }
+  display: none;
+  position: absolute;
+  bottom: 0;
+  right: 60px;
+  pointer-events: bounding-box;
+  float: none !important; }
 
 .toc-fixed.show {
   display: block; }
