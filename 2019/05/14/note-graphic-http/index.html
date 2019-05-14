@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>《图解HTTP》笔记 | cynthia'blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/6.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.2/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">《图解HTTP》笔记</h1><a id="logo" href="/.">cynthia'blog</a><p class="description">她很懒，什么都没有留下</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">《图解HTTP》笔记</h1><div class="post-meta">May 14, 2019<span> | </span><span class="category"><a href="/categories/笔记/">笔记</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><p>书籍<a href="https://book.douban.com/subject/25863515/" target="_blank" rel="external">《图解HTTP》</a>的相关笔记<br><a id="more"></a></p>
+<p><strong>http</strong> ：超文本传输协议<br><strong>TCP/IP</strong>: 把与互联网相关联的协议集合起来</p>
+<h3 id="分层管理"><a href="#分层管理" class="headerlink" title="分层管理"></a>分层管理</h3><ul>
+<li>应用层：决定向用户提供应用服务时通信的活动（FTP/DNS/HTTP）</li>
+<li>传输层：提供处于网络连接中的两台计算机之间的数据传输（TCP/UDP）</li>
+<li>网络层：处理在网络上流动的数据包（在众多选项中选择一条传输路线）（IP）</li>
+<li>链路层：处理连接网络的硬件部分</li>
+</ul>
+<h3 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h3><ul>
+<li>IP协议：把各种数据包传送给对方</li>
+<li>TCP协议：确保数据能达到目标</li>
+<li>DNS协议：域名到IP地址之间的解析服务</li>
+</ul>
+<h2 id="http协议"><a href="#http协议" class="headerlink" title="http协议"></a>http协议</h2><ul>
+<li>无状态</li>
+<li>方法：GET/POST/PUT(传输文件)/HEAD/DELETE/OPTIONS(询问支持的方法)/TRACE(追踪路径)/CONNECT(要求用隧道协议连接代理)</li>
+<li>持久连接 keep-alive</li>
+<li>管线化：同时并行发送多个请求</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li>通信使用明文（内容被窃听）</li>
+<li>不验证通信方的身份（可能被伪装）  <ul>
+<li>伪装的Web 服务器</li>
+<li>伪装的客户端</li>
+<li>无法确定对方是否具备访问权限</li>
+<li>无法判定请求来自何方、出自谁手</li>
+<li>无意义的请求也照单全收（DoS攻击）</li>
+</ul>
+</li>
+<li>无法证明报文的完整性（被篡改）<ul>
+<li>接收的内容可能有误 （中间人攻击）</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<h3 id="http信息"><a href="#http信息" class="headerlink" title="http信息"></a>http信息</h3><ul>
+<li>HTTP报文 = 报文首部 + 空行（CR+LF）+ 报文主体</li>
+<li>编码传输（内容编码/分割发送的分块传输编码Transfer Coding）</li>
+<li>发送多种数据的多部分对象集合MIME</li>
+<li>获取部分内容的请求范围 206、Range</li>
+<li>内容协商 （Accept-*）</li>
+</ul>
+<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><p>告知从服务器返回的请求结果</p>
+<ul>
+<li>204 No Content 不包含实体的主体部分（浏览器页面不发生更新）</li>
+<li>206 Partial Content 范围请求（Content-Range）</li>
+<li>301 MOved Permanently 永久重定向（书签改变）（理论上禁止POST变GET）</li>
+<li>302 Found 临时重定向（理论上禁止POST变GET）</li>
+<li>303 See Other get临时重定向</li>
+<li>304 Not Modified 服务器资源未改变，可直接使用客户端未过期资源（无主体部分）</li>
+<li>307 Temporary Redirect 临时重定向（不会从POST变成GET）</li>
+<li>400 Bad Request 请求报文中存在语法错误</li>
+<li>401 Unauthorized 需通过HTPP认证（BASIC认证、DIGEST认证）的认证信息（第一次弹窗认证窗口） 带<code>WWW-Authenticate</code>首部</li>
+<li>403 Forbidden 访问被拒绝</li>
+<li>404 Not Found 无法找到请求资源</li>
+<li>500 Internal Server Error 服务器错误</li>
+<li>503 Service Unavailable 服务器超负载或停机维护（Retru-After 告知解除状况需要的时间）</li>
+</ul>
+<h2 id="通信数据转发程序"><a href="#通信数据转发程序" class="headerlink" title="通信数据转发程序"></a>通信数据转发程序</h2><ul>
+<li>代理：接受客户端发送的请求后转发给其他服务器（不改变URI，还是http）</li>
+<li>网关:网关能使通信线路上的服务器提供非HTTP协议服务</li>
+<li>隧道：隧道可按要求建立起一条与其他服务器的通信线路（不解析HTTP请求）（todo:没理解）</li>
+</ul>
+<h3 id="HTTP报文首部"><a href="#HTTP报文首部" class="headerlink" title="HTTP报文首部"></a>HTTP报文首部</h3><p>为了给浏览器和服务器提供报文主体大小，所使用语言，认证信息等内容</p>
+<h4 id="首部字段类型"><a href="#首部字段类型" class="headerlink" title="首部字段类型"></a>首部字段类型</h4><ul>
+<li>通用首部字段<ul>
+<li>Cache-Control：控制缓存的方式</li>
+<li>Connection：逐跳首部、连接的管理</li>
+<li>Date：创建报文的日期时间</li>
+<li>Transfer-Encoding：指定报文主体的传输编码方式</li>
+<li>Via:代理服务器的相关信息</li>
+</ul>
+</li>
+<li>请求首部字段<ul>
+<li>Accept-* 用户可处理的方式（Charset、Encoding、Language）</li>
+<li>Host：请求资源所在服务器</li>
+<li>If-Match: 比较实体标记（ETag）【If-None-Match】</li>
+<li>If-Modified-Since: 比较资源更新时间【If-Unmodified-Since】</li>
+<li>If-Range 资源未更新是发送实体Byte的范围请求</li>
+<li>Range 实体的字节请求范围</li>
+<li>Referer 对请求中URI的原始获取方</li>
+<li>User-Agent </li>
+</ul>
+</li>
+<li>响应首部字段<ul>
+<li>Accept-Ranges 是否接受字节范围请求</li>
+<li>Age 推算资源创建经过的时间</li>
+<li>ETag: 资源匹配信息</li>
+<li>Location: 令客户端重定向至指定URI</li>
+<li>Retry-After: 对再次发起请求的时机要求</li>
+</ul>
+</li>
+<li>实体首部字段<ul>
+<li>Allow: 可支持的HTTP方法</li>
+<li>Centent-* :实体主体的信息（Encoding、Language、Length、Location、MD5（报文摘要）、Range(位置范围)、Type(媒体类型)）</li>
+<li>Expires 实体主体过期的日期时间</li>
+<li>Last-Modified 资源的最后修改日期时间</li>
+</ul>
+</li>
+<li>Cookie相关的首部字段<ul>
+<li>Set-Cookie 开始状态管理所使用的Cookie信息（NAME\expires\path\domain\secure\httpOnly）</li>
+<li>Cookie 服务器接收到的Cookie信息</li>
+</ul>
+</li>
+</ul>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><ul>
+<li>通信加密：通过和SSL（安全套接层）或 TLS（安全传输层协议）的组合使用，加密HTTP的通信内容【与SSL组合使用的HTTP称为HTTPS】</li>
+<li>内容加密：将参与通信的内容本身加密</li>
+<li>查明对手的证书（SSL）</li>
+<li>SSL提供认证和加密处理及摘要功能</li>
+</ul>
+<p>HTTP+加密+认证+完整性保护 = HTTPS</p>
+<h3 id="密钥加密技术"><a href="#密钥加密技术" class="headerlink" title="密钥加密技术"></a>密钥加密技术</h3><ul>
+<li>共享密钥：加密和解密用同一个密钥的方式（对称密钥加密）</li>
+<li>公开密钥加密：非对称密钥，私有密钥+公开密钥（发送密文的一方使用对方的公开密钥进行加密处理，对方收到被加密的信息后，再使用自己的私有密钥进行解密）【如果用公钥对数据进行加密，只有用对应的私钥才能解密】</li>
+<li>混合加密：在交换密钥环节使用公开密钥加密方式，之后的建立通信交换报文阶段使用共享密钥加密方式（用公开密钥生成共享密钥，用共享密钥加密报文）</li>
+</ul>
+<h3 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h3><p>无法证明公开密钥本身是货真价实的公开密钥</p>
+<p><strong>数字证书认证机构</strong>和其相关机关颁发公开密钥证书</p>
+<ul>
+<li>服务器将公钥证书发送给客户端</li>
+<li>客户端对证书上的数字签名进行验证</li>
+</ul>
+<h3 id="HTTPS通信机制"><a href="#HTTPS通信机制" class="headerlink" title="HTTPS通信机制"></a>HTTPS通信机制</h3><ol>
+<li>客户端发送<strong>Client Hello报文</strong>（客户端支持的SSL指定版本、加密组件列表（所使用的加密算法即密钥长度））【<strong>开始SSL通信</strong>】</li>
+<li>服务器以<strong>Server Hello 报文</strong>应答【<strong>确定SSL版本和加密组件</strong>】</li>
+<li>服务器发送<strong>Cerificate报文</strong>【<strong>包含公开密钥证书</strong>】</li>
+<li>服务器发送<strong>Server Hello Done</strong>报文【<strong>SSL 握手协商结束</strong>】</li>
+<li>客户端发送<strong>Client Key Exchange报文</strong>，报文中包含<code>Pre-master secret</code>随机密码串（用公开密钥进行加密的）【<strong>发送共享密钥的加密版</strong>】</li>
+<li>客户端发送<strong>Change Cipher Spec报文</strong>【<strong>提示此报文之后的报文都是通过共享密钥加密的</strong>】</li>
+<li>客户端发送<strong>Finished报文</strong>，包含了连接至今全部报文的整体校验值【<strong>给服务器能否正确解密该报文以判断握手协商能否成功</strong>】</li>
+<li>服务器发送<strong>Change Cipher Spec报文</strong></li>
+<li>服务器发送<strong>Finished报文</strong></li>
+<li>服务器和客户端的Finished报文交换完毕，SSL连接建立完成</li>
+<li>发送HTTP请求</li>
+<li>客户端断开连接，发送<strong>close_notify</strong>报文</li>
+</ol>
+<h2 id="用户身份认证"><a href="#用户身份认证" class="headerlink" title="用户身份认证"></a>用户身份认证</h2><ul>
+<li>密码</li>
+<li>动态令牌：仅限本人持有的设备内显示的一次性密码</li>
+<li>数字证书：仅限本人（终端）持有的信息</li>
+<li>生物认证：指纹和虹膜等本人的生理信息</li>
+<li>IC卡：仅限本人持有的信息</li>
+</ul>
+<h3 id="HTTP1-1认证"><a href="#HTTP1-1认证" class="headerlink" title="HTTP1.1认证"></a>HTTP1.1认证</h3><ul>
+<li>BASIC认证：401 <code>WWW-Authoriaticate</code>首部 （BASE64无加密，无法认证注销）</li>
+<li>DIGEST认证：质询响应（客户端发送<strong>认证要求</strong>，接着使用从服务器那接收到的<strong>质询码</strong>计算生成<strong>响应码</strong>，最后将响应码返回给服务器进行认证）</li>
+<li>SSL客户端认证：借由HTTPS的客户端证书完成认证的方式（服务器可确认访问是否来自自己登陆的客户端）</li>
+<li>FormBase认证</li>
+<li>session &amp; cookie</li>
+</ul>
+<h2 id="基于HTTP的功能追加协议"><a href="#基于HTTP的功能追加协议" class="headerlink" title="基于HTTP的功能追加协议"></a>基于HTTP的功能追加协议</h2><h3 id="HTTP瓶颈"><a href="#HTTP瓶颈" class="headerlink" title="HTTP瓶颈"></a>HTTP瓶颈</h3><ul>
+<li>一条连接只可发一个请求</li>
+<li>请求只能从客户端开始</li>
+<li>请求/响应首部未经压缩就发送。首部信息越多延迟越大</li>
+<li>发送冗长的首部（每次互相发送相同的首部）</li>
+<li>可任意选择数据压缩格式，非强制压缩发送</li>
+</ul>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><ul>
+<li>Ajax （缺点：还是有大量请求）</li>
+<li>Comet：延迟应答 （缺点：一次连接的持续时间长，消耗资源）</li>
+</ul>
+<h3 id="追加协议"><a href="#追加协议" class="headerlink" title="追加协议"></a>追加协议</h3><ul>
+<li>SPDY协议（会话层）：要求使用SSL【缩短Web页面的加载时间】<ul>
+<li>多路复用流：一条TCP连接，处理多个HTTP请求（只能单个域名的通信多路复用）</li>
+<li>赋予请求优先级：解决因带宽低而导致响应变慢的问题</li>
+<li>压缩HTTP首部</li>
+<li>推送功能：支持服务器主动向客户端推送数据</li>
+<li>服务器提示功能：服务器可以主动提示客户端请求所需的资源</li>
+</ul>
+</li>
+<li>WebSocket:web浏览器与web服务器之间全双工通信标准<ul>
+<li>推送功能：服务器向客户端推送数据</li>
+<li>减少通信量：建立起WebSocket连接，一直保持连接状态（握手操作）</li>
+</ul>
+</li>
+<li>HTTP2.0</li>
+<li>Web-DAV（基于万维网的分布式创作和版本控制）：对Web服务器上的内容直接进行文件复制、编辑等操作的分布式文件系统</li>
+</ul>
+<h2 id="HTTP2"><a href="#HTTP2" class="headerlink" title="HTTP2"></a>HTTP2</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>二进制</li>
+<li>多路复用的流 （与keep-alive的区别：无需等待前面的请求完成）</li>
+<li>优先级和依赖性</li>
+<li>头部压缩</li>
+<li>重置：终止当期传输的消息并重新发送一个新的<code>RST_STREAM</code></li>
+<li>服务器推送（缓存推送）：客户端请求x,服务器觉得他也需要Z，则主动将Z推送给客户端</li>
+<li>流量控制</li>
+</ul>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.0" async></script><a data-url="http://dingxx.im/2019/05/14/note-graphic-http/" data-id="cjvnxrwrv001j8ghgj30vorcq" class="article-share-link">分享</a><div class="tags"><a href="/tags/笔记/">笔记</a></div><div class="post-nav"><a href="/2019/04/28/vue-router-keepalive/" class="next">在vue-router中使用keep-alive</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/笔记/">笔记</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/translate/">翻译</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/JS-API/" style="font-size: 15px;">JS_API</a> <a href="/tags/flowChart/" style="font-size: 15px;">flowChart</a> <a href="/tags/canvas/" style="font-size: 15px;">canvas</a> <a href="/tags/svg/" style="font-size: 15px;">svg</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/JS/" style="font-size: 15px;">JS</a> <a href="/tags/nodejs/" style="font-size: 15px;">nodejs</a> <a href="/tags/koa2/" style="font-size: 15px;">koa2</a> <a href="/tags/iOS/" style="font-size: 15px;">iOS</a> <a href="/tags/笔记/" style="font-size: 15px;">笔记</a> <a href="/tags/vue/" style="font-size: 15px;">vue</a> <a href="/tags/webpack/" style="font-size: 15px;">webpack</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/note-graphic-http/">《图解HTTP》笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/vue-router-keepalive/">在vue-router中使用keep-alive</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/26/node-debug/">node调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/26/iOS-pit/">iOS下遇到的前端问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/22/whatsapp-share/">调起whatsapp分享调研总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/02/22/koa2-note/">koa2的简单使用笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/02/draw-polyline/">svg/canvas绘制多边形</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/08/three-day-moments/">朋友圈的三天可见</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/01/git-find-bug/">git 定位问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/13/git-checkout-reset-revert/">git-代码重置</a></li></ul></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">cynthia'blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.0.47/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
