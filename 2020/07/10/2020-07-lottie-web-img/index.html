@@ -11,7 +11,7 @@
 <p>再想想项目是用webpack打包的，打包出来的图片位置和文件名了，按json文件的定义（相对路径，走到了<code>else</code>部分），那一定是找不到对应的文件的呀，所以才导致了出现裂图的情况。</p>
 <h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>那有什么办法可以让json中的图片路径是一个正常能访问的路径呢？？（绝对路径 or base64）</p>
 <h3 id="base64"><a href="#base64" class="headerlink" title="base64"></a>base64</h3><p>第一反应就是直接设计师解决，如果他们生成这个动画时用的图片是 base64 的话，那项目只要维护这一份<code>json</code>就好了，如官网提供的<a href="https://assets9.lottiefiles.com/packages/lf20_BuxiUX.json" target="_blank" rel="external">部分lottie动画</a></p>
-<p><img src="/images/2020-07-lottie-web-img/fail-img.png" alt="base64截图"></p>
+<p><img src="/images/2020-07-lottie-web-img/base64.png" alt="base64截图"></p>
 <p>然后就找了一下万能的网络，搜到了这篇文章 <a href="https://mp.weixin.qq.com/s/Qrwc60w2kH7psuB8qBhMYw" target="_blank" rel="external">动画落地 | 从 AE 制作到落地开发</a></p>
 <blockquote>
 <p>Lottie 早期的版本是不支持图片类动画的，导出 json 之后会自动生成一个 img 的资源文件夹，播放 .json 文件时，需要解压资源压缩包到本地目录才能正常播放。从 bodymovin V 5.1.15 之后，Lottie 将图片转为 base 64 编码，使用字符代替图像地址，并封装在 json 里，直接播放一个 .json 文件，不用再拖着一个资源文件夹了。</p>
